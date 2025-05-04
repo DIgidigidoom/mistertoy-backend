@@ -1,0 +1,93 @@
+[
+    {
+      "_id": "t101",
+      "name": "Talking Doll",
+      "imgUrl": "hardcoded-url-1",
+      "price": 123,
+      "labels": ["Doll", "Baby"],
+      "createdAt": 1714348800000,
+      "inStock": true
+    },
+    {
+      "_id": "t102",
+      "name": "Puzzle Master",
+      "imgUrl": "hardcoded-url-2",
+      "price": 85,
+      "labels": ["Puzzle", "Box game"],
+      "createdAt": 1711910400000,
+      "inStock": true
+    },
+    {
+      "_id": "t103",
+      "name": "Speed Racer",
+      "imgUrl": "hardcoded-url-3",
+      "price": 200,
+      "labels": ["On wheels", "Outdoor"],
+      "createdAt": 1709404800000,
+      "inStock": false
+    },
+    {
+      "_id": "t104",
+      "name": "Magic Blocks",
+      "imgUrl": "hardcoded-url-4",
+      "price": 150,
+      "labels": ["Art", "Box game"],
+      "createdAt": 1706976000000,
+      "inStock": true
+    },
+    {
+      "_id": "t105",
+      "name": "Outdoor Explorer",
+      "imgUrl": "hardcoded-url-5",
+      "price": 60,
+      "labels": ["Outdoor"],
+      "createdAt": 1702752000000,
+      "inStock": true
+    },
+    {
+      "_id": "t106",
+      "name": "Battery Bot",
+      "imgUrl": "hardcoded-url-6",
+      "price": 180,
+      "labels": ["Battery Powered", "On wheels"],
+      "createdAt": 1700150400000,
+      "inStock": true
+    },
+    {
+      "_id": "t107",
+      "name": "Baby Cuddler",
+      "imgUrl": "hardcoded-url-7",
+      "price": 95,
+      "labels": ["Baby", "Doll"],
+      "createdAt": 1697568000000,
+      "inStock": false
+    },
+    {
+      "_id": "t108",
+      "name": "Boxy Fun",
+      "imgUrl": "hardcoded-url-8",
+      "price": 70,
+      "labels": ["Box game"],
+      "createdAt": 1713139200000,
+      "inStock": true
+    },
+    {
+      "_id": "t109",
+      "name": "Artistic Wonder",
+      "imgUrl": "hardcoded-url-9",
+      "price": 110,
+      "labels": ["Art"],
+      "createdAt": 1705776000000,
+      "inStock": true
+    },
+    {
+      "_id": "t110",
+      "name": "Rolling Thunder",
+      "imgUrl": "hardcoded-url-10",
+      "price": 220,
+      "labels": ["On wheels", "Outdoor"],
+      "createdAt": 1714694400000,
+      "inStock": true
+    }
+  ]
+  

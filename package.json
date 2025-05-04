@@ -1,0 +1,31 @@
+{
+  "name": "mistertoy-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "set PORT=3030&nodemon --ignore \"./data\" server.js",
+    "dev:mac": "export PORT=3030 && nodemon --ignore \"./data\" server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DIgidigidoom/mistertoy-backend.git"
+  },
+  "author": "Tom Shahar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DIgidigidoom/mistertoy-backend/issues"
+  },
+  "homepage": "https://github.com/DIgidigidoom/mistertoy-backend#readme",
+  "description": "",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "cryptr": "^6.3.0",
+    "express": "^5.1.0",
+    "follow-redirects": "^1.15.9",
+    "nodemon": "^3.1.10"
+  }
+}
