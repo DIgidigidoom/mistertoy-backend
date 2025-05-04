@@ -1,7 +1,90 @@
 
+// import fs from 'fs'
+// import { utilService } from './util.service.js'
+
+
+// export const toyService = {
+//     query,
+//     getById,
+//     remove,
+//     save
+// }
+
+// const PAGE_SIZE = 5
+// const toys = utilService.readJsonFile('data/toy.json')
+
+// function query(filterBy = { txt: '' }) {
+//     const regex = new RegExp(filterBy.txt, 'i')
+//     var toysToReturn = toys.filter(toy => regex.test(toy.vendor))
+
+//     if (filterBy.minSpeed) {
+//         toysToReturn = toysToReturn.filter(toy => toy.speed >= filterBy.minSpeed)
+//     }
+//     if (filterBy.maxPrice) {
+//         toysToReturn = toysToReturn.filter(toy => toy.price <= filterBy.maxPrice)
+//     }
+
+//     if (filterBy.pageIdx !== undefined) {
+//         const startIdx = filterBy.pageIdx * PAGE_SIZE
+//         toysToReturn = toysToReturn.slice(startIdx, startIdx + PAGE_SIZE)
+//     }
+//     return Promise.resolve(toysToReturn)
+// }
+
+// function getById(toyId) {
+//     const toy = toys.find(toy => toy._id === toyId)
+//     return Promise.resolve(toy)
+// }
+
+// function remove(toyId, loggedinUser) {
+//     const idx = toys.findIndex(toy => toy._id === toyId)
+//     if (idx === -1) return Promise.reject('No Such Toy')
+
+//     const toy = toys[idx]
+//     // if (!loggedinUser.isAdmin &&
+//     //     toy.owner._id !== loggedinUser._id) {
+//     //     return Promise.reject('Not your toy')
+//     // }
+//     toys.splice(idx, 1)
+//     return _saveToysToFile()
+// }
+
+// function save(toy, loggedinUser) {
+//     if (toy._id) {
+//         const toyToUpdate = toys.find(currToy => currToy._id === toy._id)
+//         // if (!loggedinUser.isAdmin &&
+//         //     toyToUpdate.owner._id !== loggedinUser._id) {
+//         //     return Promise.reject('Not your toy')
+//         // }
+//         toyToUpdate.vendor = toy.vendor
+//         toyToUpdate.speed = toy.speed
+//         toyToUpdate.price = toy.price
+//         toy = toyToUpdate
+//     } else {
+//         toy._id = utilService.makeId()
+//         toy.owner = loggedinUser
+//         toys.push(toy)
+//     }
+//     delete toy.owner.score
+//     return _saveToysToFile().then(() => toy)
+// }
+
+
+// function _saveToysToFile() {
+//     return new Promise((resolve, reject) => {
+//         const data = JSON.stringify(toys, null, 2)
+//         fs.writeFile('data/toy.json', data, (err) => {
+//             if (err) {
+//                 loggerService.error('Cannot write to toys file', err)
+//                 return reject(err)
+//             }
+//             resolve()
+//         })
+//     })
+// }
+
 import fs from 'fs'
 import { utilService } from './util.service.js'
-
 
 export const toyService = {
     query,
@@ -10,25 +93,56 @@ export const toyService = {
     save
 }
 
+const TOY_DB_PATH = 'data/toy.json'
 const PAGE_SIZE = 5
-const toys = utilService.readJsonFile('data/toy.json')
 
-function query(filterBy = { txt: '' }) {
-    const regex = new RegExp(filterBy.txt, 'i')
-    var toysToReturn = toys.filter(toy => regex.test(toy.vendor))
+let toys = utilService.readJsonFile(TOY_DB_PATH)
 
-    if (filterBy.minSpeed) {
-        toysToReturn = toysToReturn.filter(toy => toy.speed >= filterBy.minSpeed)
-    }
-    if (filterBy.maxPrice) {
-        toysToReturn = toysToReturn.filter(toy => toy.price <= filterBy.maxPrice)
+function query(filterBy = {}) {
+    let {
+        txt = '',
+        maxPrice = Infinity,
+        inStockFilter = 'all',
+        sortByLabel = [],
+        sortBy = 'name',
+        sortOrder = 1,
+        pageIdx
+    } = filterBy
+   
+    
+    const regex = new RegExp(txt, 'i')
+    let filteredToys = toys.filter(toy => regex.test(toy.name))
+
+    filteredToys = filteredToys.filter(toy => toy.price <= maxPrice)
+
+    if (inStockFilter === 'inStockFiltered') {
+        filteredToys = filteredToys.filter(toy => toy.inStock)
+    } else if (inStockFilter === 'outOfStock') {
+        filteredToys = filteredToys.filter(toy => !toy.inStock)
     }
 
-    if (filterBy.pageIdx !== undefined) {
-        const startIdx = filterBy.pageIdx * PAGE_SIZE
-        toysToReturn = toysToReturn.slice(startIdx, startIdx + PAGE_SIZE)
+    if (sortByLabel?.length) {
+        filteredToys = filteredToys.filter(toy =>
+            Array.isArray(toy.labels) &&
+            toy.labels.some(label => sortByLabel.includes(label))
+        )
     }
-    return Promise.resolve(toysToReturn)
+
+    if (sortBy === 'name') {
+        filteredToys.sort((a, b) => a.name.localeCompare(b.name) * sortOrder)
+    } else if (sortBy === 'price') {
+        filteredToys.sort((a, b) => (a.price - b.price) * sortOrder)
+    } else if (sortBy === 'createdAt') {
+        filteredToys.sort((a, b) => (a.createdAt - b.createdAt) * sortOrder)
+    }
+
+    if (pageIdx !== undefined) {
+        const startIdx = pageIdx * PAGE_SIZE
+        filteredToys = filteredToys.slice(startIdx, startIdx + PAGE_SIZE)
+    }
+   
+
+    return Promise.resolve(filteredToys)
 }
 
 function getById(toyId) {
@@ -36,48 +150,31 @@ function getById(toyId) {
     return Promise.resolve(toy)
 }
 
-function remove(toyId, loggedinUser) {
+function remove(toyId) {
     const idx = toys.findIndex(toy => toy._id === toyId)
     if (idx === -1) return Promise.reject('No Such Toy')
-
-    const toy = toys[idx]
-    if (!loggedinUser.isAdmin &&
-        toy.owner._id !== loggedinUser._id) {
-        return Promise.reject('Not your toy')
-    }
     toys.splice(idx, 1)
     return _saveToysToFile()
 }
 
-function save(toy, loggedinUser) {
+function save(toy) {
     if (toy._id) {
-        const toyToUpdate = toys.find(currToy => currToy._id === toy._id)
-        if (!loggedinUser.isAdmin &&
-            toyToUpdate.owner._id !== loggedinUser._id) {
-            return Promise.reject('Not your toy')
-        }
-        toyToUpdate.vendor = toy.vendor
-        toyToUpdate.speed = toy.speed
-        toyToUpdate.price = toy.price
-        toy = toyToUpdate
+        const idx = toys.findIndex(curr => curr._id === toy._id)
+        if (idx === -1) return Promise.reject('Toy not found')
+        toys[idx] = { ...toys[idx], ...toy }
     } else {
         toy._id = utilService.makeId()
-        toy.owner = loggedinUser
+        toy.createdAt = Date.now()
         toys.push(toy)
     }
-    delete toy.owner.score
     return _saveToysToFile().then(() => toy)
 }
-
 
 function _saveToysToFile() {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify(toys, null, 2)
-        fs.writeFile('data/toy.json', data, (err) => {
-            if (err) {
-                loggerService.error('Cannot write to toys file', err)
-                return reject(err)
-            }
+        fs.writeFile(TOY_DB_PATH, data, (err) => {
+            if (err) return reject(err)
             resolve()
         })
     })
