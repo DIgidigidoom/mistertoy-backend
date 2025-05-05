@@ -47,41 +47,6 @@
     "inStock": true
   },
   {
-    "_id": "t106",
-    "name": "Battery Bot",
-    "imgUrl": "hardcoded-url-6",
-    "price": 180,
-    "labels": [
-      "Battery Powered",
-      "On wheels"
-    ],
-    "createdAt": 1700150400000,
-    "inStock": true
-  },
-  {
-    "_id": "t107",
-    "name": "Baby Cuddler",
-    "imgUrl": "hardcoded-url-7",
-    "price": 95,
-    "labels": [
-      "Baby",
-      "Doll"
-    ],
-    "createdAt": 1697568000000,
-    "inStock": false
-  },
-  {
-    "_id": "t108",
-    "name": "Boxy Fun",
-    "imgUrl": "hardcoded-url-8",
-    "price": 70,
-    "labels": [
-      "Box game"
-    ],
-    "createdAt": 1713139200000,
-    "inStock": true
-  },
-  {
     "_id": "t110",
     "name": "Rolling Thunder",
     "imgUrl": "hardcoded-url-10",
