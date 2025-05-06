@@ -22,10 +22,9 @@ function query(filterBy = {}) {
         sortByLabel = [],
         sortBy = 'name',
         sortOrder = 1,
-        pageIdx
     } = filterBy
-   
     
+
     const regex = new RegExp(txt, 'i')
     let filteredToys = toys.filter(toy => regex.test(toy.name))
 
@@ -56,42 +55,58 @@ function query(filterBy = {}) {
     //     const startIdx = pageIdx * PAGE_SIZE
     //     filteredToys = filteredToys.slice(startIdx, startIdx + PAGE_SIZE)
     // }
-   
+
 
     return Promise.resolve(filteredToys)
 }
 
-function getById(toyId) {
+
+async function getById(toyId) {
     const toy = toys.find(toy => toy._id === toyId)
-    return Promise.resolve(toy)
+    return toy
 }
 
-function remove(toyId) {
-    const idx = toys.findIndex(toy => toy._id === toyId)
-    if (idx === -1) return Promise.reject('No Such Toy')
-    toys.splice(idx, 1)
-    return _saveToysToFile()
-}
 
-function save(toy) {
-    if (toy._id) {
-        const idx = toys.findIndex(curr => curr._id === toy._id)
-        if (idx === -1) return Promise.reject('Toy not found')
-        toys[idx] = { ...toys[idx], ...toy }
-    } else {
-        toy._id = utilService.makeId()
-        toy.createdAt = Date.now()
-        toys.push(toy)
+async function remove(toyId) {
+    try {
+        const idx = toys.findIndex(toy => toy._id === toyId)
+        if (idx === -1) throw new Error('No Such Toy')
+        toys.splice(idx, 1)
+        await _saveToysToFile()
+    } catch (err) {
+        console.error('Failed to remove toy:', err)
+        throw err
     }
-    return _saveToysToFile().then(() => toy)
 }
 
-function _saveToysToFile() {
-    return new Promise((resolve, reject) => {
+
+async function save(toy) {
+    try {
+        if (toy._id) {
+            const idx = toys.findIndex(curr => curr._id === toy._id)
+            if (idx === -1) return new Error('Toy not found')
+            toys[idx] = { ...toys[idx], ...toy }
+        } else {
+            toy._id = utilService.makeId()
+            toy.createdAt = Date.now()
+            toy.inStock = true
+            toys.push(toy)
+        }
+        await _saveToysToFile()
+        return toy
+
+    } catch (err) {
+        console.error('Failed to save toy:', err)
+        throw err
+    }
+}
+
+
+async function _saveToysToFile() {
+    try {
         const data = JSON.stringify(toys, null, 2)
-        fs.writeFile(TOY_DB_PATH, data, (err) => {
-            if (err) return reject(err)
-            resolve()
-        })
-    })
+        await fs.promises.writeFile(TOY_DB_PATH, data)
+    } catch (err) {
+        console.log("Error saving toy: ", err)
+    }
 }

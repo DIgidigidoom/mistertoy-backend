@@ -36,6 +36,18 @@
     "inStock": false
   },
   {
+    "_id": "t104",
+    "name": "Magic Blocks",
+    "imgUrl": "hardcoded-url-4",
+    "price": 150,
+    "labels": [
+      "Art",
+      "Box game"
+    ],
+    "createdAt": 1706976000000,
+    "inStock": true
+  },
+  {
     "_id": "t105",
     "name": "Outdoor Explorer",
     "imgUrl": "hardcoded-url-5",
@@ -57,15 +69,5 @@
     ],
     "createdAt": 1714694400000,
     "inStock": true
-  },
-  {
-    "name": "Racing Car",
-    "price": 130,
-    "inStock": true,
-    "labels": [
-      "Cars",
-      "Outdoor"
-    ],
-    "_id": "1zFqT"
   }
 ]
