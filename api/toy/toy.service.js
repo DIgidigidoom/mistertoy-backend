@@ -11,8 +11,8 @@ export const toyService = {
     remove,
     add,
     update,
-    // addMsg,
-    // removeMsg,
+    addMsg,
+    removeMsg,
 }
 
 async function query(filterBy = {}) {
@@ -96,34 +96,34 @@ async function update(toy) {
     }
 }
 
-// async function addMsg(toyId, msg) {
-//     try {
-//         msg.id = utilService.makeId()
-//         const collection = await dbService.getCollection('toy')
-//         await collection.updateOne(
-//             { _id: ObjectId.createFromHexString(toyId) },
-//             { $push: { msgs: msg } }
-//         )
-//         return msg
-//     } catch (error) {
-//         loggerService.error(`cannot add message to toy ${toyId}`, error)
-//         throw error
-//     }
-// }
+async function addMsg(toyId, msg) {
+    try {
+        msg.id = utilService.makeId()
+        const collection = await dbService.getCollection('toy')
+        await collection.updateOne(
+            { _id: ObjectId.createFromHexString(toyId) },
+            { $push: { msgs: msg } }
+        )
+        return msg
+    } catch (error) {
+        loggerService.error(`cannot add message to toy ${toyId}`, error)
+        throw error
+    }
+}
 
-// async function removeMsg(toyId, msgId) {
-//     try {
-//         const collection = await dbService.getCollection('toy')
-//         await collection.updateOne(
-//             { _id: ObjectId.createFromHexString(toyId) },
-//             { $pull: { msgs: { id: msgId } } }
-//         )
-//         return msgId
-//     } catch (error) {
-//         loggerService.error(`cannot remove message from toy ${toyId}`, error)
-//         throw error
-//     }
-// }
+async function removeMsg(toyId, msgId) {
+    try {
+        const collection = await dbService.getCollection('toy')
+        await collection.updateOne(
+            { _id: ObjectId.createFromHexString(toyId) },
+            { $pull: { msgs: { id: msgId } } }
+        )
+        return msgId
+    } catch (error) {
+        loggerService.error(`cannot remove message from toy ${toyId}`, error)
+        throw error
+    }
+}
 
 function _buildCriteria(filterBy) {
     const filterCriteria = {}
